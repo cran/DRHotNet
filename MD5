@@ -1,0 +1,13 @@
+5cfcf2c970d81a9e91a08484d7e42ded *DESCRIPTION
+ff44dd8d046b2518075c83d830f0b073 *NAMESPACE
+bb97649778c2137dfa078d567e0b2fe5 *R/AuxiliaryFunctions.R
+62a79cedca7ea4de6bac67255514c322 *R/DiffHotspots_n_k.R
+fe5edd0f93a866562b8ca6c2ef6abb12 *R/ImportPackages.R
+1466cb13fc88fa0cfc9a25cca546161f *R/NeighbourhoodMatrixNetwork.R
+0dd0d482cefab8810ad9dbd741b4d935 *R/RelativeProbabilityNetwork.R
+8297e9d77aea68e131cec922e90ab354 *R/data.R
+2d0d38f5c904aa733f32d3bceb37136d *data/SampleMarkedPattern.rda
+e63b310ff160f7d89da6bd9a26319299 *man/DiffHotspots_n_k.Rd
+5e8ea4d339e100cb959b6172874235ef *man/NeighbourhoodMatrixNetwork.Rd
+50e4c45a6c373fa63569d75e4e56382a *man/RelativeProbabilityNetwork.Rd
+234d340d3457733e3d2a45f4b509a2ba *man/SampleMarkedPattern.Rd
