@@ -2,7 +2,7 @@
 % Please edit documentation in R/NeighbourhoodMatrixNetwork.R
 \name{NeighbourhoodMatrixNetwork}
 \alias{NeighbourhoodMatrixNetwork}
-\title{Creates a neighbourhood structure of a linear network}
+\title{Creates the neighbourhood structure of a linear network}
 \usage{
 NeighbourhoodMatrixNetwork(network)
 }

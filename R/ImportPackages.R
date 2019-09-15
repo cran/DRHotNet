@@ -1,8 +1,11 @@
+#' @import graphics
+#' @import grDevices
+#' @import maptools
+#' @import PBSmapping
+#' @import sp
 #' @import spatstat
 #' @import spdep
-#' @import maptools
-#' @import sp
-#' @import utils
 #' @import stats
+#' @import utils
 #' @importFrom raster pointDistance
 NULL

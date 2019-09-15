@@ -136,3 +136,79 @@ VecinosOrdenkSiguiente <- function(grafo, k, i, vertices_ejes, lista_vecinos, re
   colnames(resultado)=rep("",ncol(resultado))
   return(resultado)
 }
+
+ExtraerProbabilidades <- function(relative_probabilities,indexes){
+  probs=c()
+  for (i in indexes){
+    probs=c(probs,relative_probabilities[[i]][[1]][1])
+  }
+  names(probs)=NULL
+  return(probs)
+}
+
+ExtraerEventos <- function(relative_probabilities,indexes){
+  events=c()
+  for (i in indexes){
+    events=c(events,relative_probabilities[[i]][[2]])
+  }
+  names(events)=NULL
+  return(events)
+}
+
+ExtraerSegmentosHotspots <- function(hotspots){
+  segments=c()
+  for (i in c(1:length(hotspots))){
+    segments=c(segments,hotspots[[i]])
+  }
+  names(segments)=NULL
+  return(segments)
+}
+
+MarkPermutation <- function(X){
+  perm=sample(1:length(X$data$x),length(X$data$x),replace=F)
+  if (is.null(dim(marks(X)))){
+    marks(X)=marks(X)[perm]
+  } else {
+    marks(X)=marks(X)[perm,]
+  }
+  return(X)
+}
+
+UTM2LONLAT <- function(coord){
+  if (class(coord)=="numeric"){
+    coord=t(as.matrix(coord))
+  }
+  df=as.data.frame(coord)
+  colnames(df)=c("lon","lat")
+  coordinates(df) <- c("lon", "lat")
+  proj4string(df) <- CRS("+proj=utm +zone=19 ellps=WGS84")
+  res <- spTransform(df, CRS("+proj=longlat +datum=WGS84"))
+  res=as.data.frame(cbind(res@coords[,1],res@coords[,2]))
+  colnames(res)=c("lon","lat")
+  return(res)
+}
+
+LONLAT2UTM <- function(coord){
+  if (class(coord)=="numeric"){
+    coord=t(as.matrix(coord))
+  }
+  df=as.data.frame(coord)
+  colnames(df)=c("lon","lat")
+  coordinates(df) <- c("lon", "lat")
+  proj4string(df) <- CRS("+proj=longlat +datum=WGS84")
+  res <- spTransform(df, CRS("+proj=utm +zone=19 ellps=WGS84"))
+  res=as.data.frame(cbind(res@coords[,1],res@coords[,2]))
+  colnames(res)=c("lon","lat")
+  return(res)
+}
+
+KthOrderNeighbours <- function(segments,W,order){
+  neighbours=unlist(W$neighbours[segments])
+  if (order>=2){
+    for (i in c(2:order)){
+      neighbours=c(neighbours,unlist(W$neighbours[neighbours]))
+    }
+  }
+  neighbours=sort(unique(neighbours))
+  return(neighbours)  
+}

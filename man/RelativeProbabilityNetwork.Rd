@@ -2,30 +2,26 @@
 % Please edit documentation in R/RelativeProbabilityNetwork.R
 \name{RelativeProbabilityNetwork}
 \alias{RelativeProbabilityNetwork}
-\title{Computes the probability of observing a type of event in a linear network at a set of points provided}
+\title{Computes the relative probability of observing a type of event along a linear network}
 \usage{
-RelativeProbabilityNetwork(X, W, sigma, x, y, mark, category_mark)
+RelativeProbabilityNetwork(X, lixel_length, sigma, mark, category_mark)
 }
 \arguments{
-\item{X}{- A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)}
+\item{X}{- A \code{lpp} object representing a marked point pattern lying on a linear network (\code{linnet} object)}
 
-\item{W}{- A \code{listw} object representing the neighbourhood structure that the road segments of the network form}
+\item{lixel_length}{- A numeric value representing a lixel length that will be used for creating a split version of the network contained in \code{X}. Then, the length of all the segments of the split network is below \code{lixel_length}}
 
 \item{sigma}{- A numeric value representing the bandwidth parameter (in meters)}
-
-\item{x}{- A numeric vector representing the x-coordinates of the points of the network at which the relative probability is computed}
-
-\item{y}{- A numeric vector representing the y-coordinates of the points of the network at which the relative probability is computed}
 
 \item{mark}{- Mark of \code{X} that is used to characterize the type of event. The algorithm searches microzones of the network where this mark is over- or underrepresented}
 
 \item{category_mark}{- A numeric/character value from the set allowed in the chosen \code{mark} to compute the relative probability in relation to it}
 }
 \value{
-Returns a list of length equal to \code{length(x)}. Each component of the list is itself a list, containing two numeric vectors. Given an index \code{i}, the first vector provides the relative probability of the event type being considered at the point of coordinates \code{x[i]} and \code{y[i]}, the number of events of the type of interest found at \code{sigma} meters from the point of coordinates \code{x[i]} and \code{y[i]}, and the total number of events found at \code{sigma} meters from this point (regardless of the type). The second vector contains the indexes (according to object \code{X}) of all the events used for the estimation of the corresponding relative probability, at \code{sigma} meters of distance (regardless of the type)
+Returns a list that contains the relative probability values estimated along the network for the type of event specified by \code{mark} and \code{category_mark}
 }
 \description{
-Given a marked point pattern lying on a linear network structure, this function uses kernel density estimation (KDE) to estimate a probability of occurrence for a type of event specified by the user through the marks of the pattern at the points of the network provided. The marks of a point pattern represent additional information of the events that are part of the pattern
+Given a marked point pattern lying on a linear network structure, this function uses kernel density estimation (KDE) to estimate a relative probability of occurrence for a type of event specified by the user through the marks of the pattern. The marks of a point pattern represent additional information of the events that are part of the pattern
 }
 \examples{
 library(DRHotNet)
@@ -34,26 +30,14 @@ library(spdep)
 library(raster)
 library(maptools)
 \donttest{
-network=SampleMarkedPattern$domain
-X=SampleMarkedPattern
-network_lix=lixellate(network,eps=50)
-X_lix=lpp(cbind(X$data$x,X$data$y),network_lix)
-marks(X_lix)=marks(X)
-sigma=100
-collision_type="Rear-end"
-W=NeighbourhoodMatrixNetwork(network_lix)
-projection="+proj=utm +zone=30 ellps=WGS84 +ellps=WGS84"
-network_lix_sp=as.SpatialLines.psp(as.psp(network_lix))
-proj4string(network_lix_sp)=projection
-middle_points=SpatialLinesMidPoints(network_lix_sp)@coords
-x=middle_points[,1]
-y=middle_points[,2]
-relative_probabilities=RelativeProbabilityNetwork(X_lix,W,sigma,x,y, 
-                       "Collision",collision_type)
+rel_probs_rear_end <- RelativeProbabilityNetwork(X = SampleMarkedPattern, 
+lixel_length = 50, sigma = 100, mark = "Collision", category_mark = "Rear-end")
 }
 }
 \references{
 Baddeley, A., Rubak, E., & Turner, R. (2015). Spatial point patterns: methodology and applications with R. Chapman and Hall/CRC.
+
+Briz-Redon, A., Martinez-Ruiz, F., & Montes, F. (2019). Identification of differential risk hotspots for collision and vehicle type in a directed linear network. Accident Analysis & Prevention, 132, 105278.
 
 Diggle, P. J. (2013). Statistical analysis of spatial and spatio-temporal point patterns. Chapman and Hall/CRC.
 

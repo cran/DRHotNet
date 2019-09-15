@@ -1,4 +1,4 @@
-#' Creates a neighbourhood structure of a linear network
+#' Creates the neighbourhood structure of a linear network
 #' 
 #' Given a linear network structure, this function creates the neighbourhood matrix ("queen" criterion) associated to it. Two segments of the network are neighbours if they share a vertex   
 #' 
@@ -15,10 +15,8 @@
 #' chicago_neighbourhood$neighbours[[1]]
 #' @export
 NeighbourhoodMatrixNetwork <- function(network){
-  aux=SpatialPolygons(lapply(1:network$lines$n, 
-                               function(i) Polygons(list(Polygon(cbind(t(network$lines[[1]][i,c(1,3)]),
-                                                                       t(network$lines[[1]][i,c(2,4)])))), 
-                                                    paste0("Line",i))))
+  aux=SpatialLines2PolySet(as.SpatialLines.psp(as.psp(network)))
+  aux=PolySet2SpatialPolygons(aux)
   queen=poly2nb(aux, queen=TRUE)
   W=nb2listw(queen, style="W", zero.policy=TRUE)
   return(W)
