@@ -1,12 +1,13 @@
 #' Identifies differential risk hotspots along a linear network given a vector of relative probabilities computed over the middle points of the segments of the network
 #' 
-#' Given the relative probability surface corresponding to the occurrence of a type of event along a linear network, this function filters and groups in hotspots those segments satisfying two conditions: 1) exceeding the average of the relative probabilities for all the events in the network in \code{k} times the standard deviation of the set of probabilities, and 2) having provided \code{n} or more events of the network for the computation of their corresponding relative probability (a factor that depends on the choice of \code{sigma} when using the function \code{RelativeProbabilityNetwork}). In summary, \code{k} and \code{n} control the formation of differential risk hotspots along the network, given a set of relative probabilities covering the network. The choice of a higher value for \code{k} or \code{n} (or both) is more demanding and leads to a lower number of differential risk hotspots being detected. Users should test several values of \code{k} and \code{n} (sensitivity analysis on \code{k} and \code{n}) in order to reach reasonable choices for the research or practical purposes of their data analyses 
+#' Given a relative probability surface corresponding to the occurrence of a type of event along a linear network, this function filters and groups in hotspots those segments satisfying two conditions: 1) the relative probability in the segment exceeds the average relative probability per segment in \code{k} times the standard deviation of the complete set of probabilities estimated across all the segments of the network, and 2) there are \code{n} or more events at a distance below \code{sigma} from the middle point of the segment (\code{sigma} is obtained from the object \code{rel_probs} computed with the function \code{RelativeProbabilityNetwork}). In summary, \code{k} and \code{n} control the formation of differential risk hotspots along the network, given a set of relative probabilities covering the network. The choice of a higher value for \code{k} or \code{n} (or both) represents a more strict criterion and leads to a lower number of differential risk hotspots being detected. Users should test several values of \code{k} and \code{n} (sensitivity analysis on \code{k} and \code{n}) in order to reach reasonable choices for the research or practical purposes of their data analyses. This sensitivity analysis can be carried out with the \code{Sensitivity_k_n} function
 #' 
 #' @param X - A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)
 #' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{RelativeProbabilityNetwork}
 #' @param k - A numeric value that controls the procedure of detecting differential risk hotspots (departure from average relative probability), as described above
 #' @param n - A numeric value that controls the procedure of detecting differential risk hotspots (minimum size for the sample of events implicated in the computation of the relative probabilities), as described above
-#' @param event_distances - A matrix that contains the shortest-path distances between the middle points of the segments satisfying the condition on parameter \code{k} and the events o \code{X}. By default it is set to \code{NULL}
+#' @param dist - A character indicating which distance to use. Two values are allowed: \code{path} (shortest-path distance) and \code{euclidean} (Euclidean distance). By default, the shortest-path distance is used. Change to \code{euclidean} to reduce the computation time or skip memory issues
+#' @param event_distances - A matrix that contains the distances between the middle points of the segments satisfying the condition on parameter \code{k} and the events o \code{X}. By default it is set to \code{NULL}
 #' @return Returns a list that contains the differential risk hotspots found for \code{X} and the type of event specified by \code{rel_probs}
 #' @examples 
 #' library(DRHotNet)
@@ -22,7 +23,7 @@
 #' }
 #' @references Briz-Redon, A., Martinez-Ruiz, F., & Montes, F. (2019). Identification of differential risk hotspots for collision and vehicle type in a directed linear network. Accident Analysis & Prevention, 132, 105278.
 #' @export
-DRHotspots_k_n <- function(X,rel_probs,k,n,event_distances=NULL){
+DRHotspots_k_n <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
   
   network=X$domain
   
@@ -46,7 +47,13 @@ DRHotspots_k_n <- function(X,rel_probs,k,n,event_distances=NULL){
   
   # find events close to the midpoints of sig, to determine n
   if (is.null(event_distances)){
-    distances=crossdist.lpp(lpp_midpoints[sig,],X)
+    if (dist=="path"){
+      distances=crossdist.lpp(lpp_midpoints[sig,],X)
+    } else{
+      X_planar=as.ppp(X)
+      lpp_midpoints_planar=as.ppp(lpp_midpoints)
+      distances=crossdist.ppp(lpp_midpoints_planar[sig,],X_planar)
+    }
   } else{
     if (length(event_distances)==(length(sig)*length(X$data$x))){
       distances=event_distances

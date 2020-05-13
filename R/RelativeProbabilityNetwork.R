@@ -40,10 +40,10 @@ RelativeProbabilityNetwork <- function(X, lixel_length, sigma, mark, category_ma
   # Compute densities (equal-continuous, PDE method) as a function on a linear network
   
   # Considering all events
-  density_function_all=PDEdensityLPP(X, sigma, weights=NULL, fun=T)
+  density_function_all=as.linfun.linim(density.lpp(X, sigma = sigma))
   
   # Considering only the events whose mark is category_mark
-  density_function_type=PDEdensityLPP(X[marksX[,find_mark]==category_mark], sigma, weights=NULL, fun=T)
+  density_function_type=as.linfun.linim(density.lpp(X[marksX[,find_mark]==category_mark], sigma = sigma))
   
   # Extract network
   network=X$domain
