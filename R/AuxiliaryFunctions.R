@@ -5,7 +5,7 @@ DetectarEjeGrafo <-function(grafo,datos){
     x=datos$x[j]
     y=datos$y[j]
     aux=list(x=x,y=y)
-    X_aux=lpp(aux,grafo)
+    X_aux=spatstat.linnet::lpp(aux,grafo)
     eje=X_aux$data$seg
     ejes=c(ejes,eje)
   }
@@ -166,10 +166,10 @@ ExtraerSegmentosHotspots <- function(hotspots){
 
 MarkPermutation <- function(X){
   perm=sample(1:length(X$data$x),length(X$data$x),replace=F)
-  if (is.null(dim(marks(X)))){
-    marks(X)=marks(X)[perm]
+  if (is.null(dim(spatstat.geom::marks(X)))){
+    spatstat.geom::marks(X)=spatstat.geom::marks(X)[perm]
   } else {
-    marks(X)=marks(X)[perm,]
+    spatstat.geom::marks(X)=spatstat.geom::marks(X)[perm,]
   }
   return(X)
 }

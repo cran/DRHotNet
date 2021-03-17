@@ -4,8 +4,7 @@
 \alias{DRHotspots_k_n}
 \title{Identifies differential risk hotspots along a linear network given a vector of relative probabilities computed over the middle points of the segments of the network}
 \usage{
-DRHotspots_k_n(X, rel_probs, k, n, dist = "path",
-  event_distances = NULL)
+DRHotspots_k_n(X, rel_probs, k, n, dist = "path", event_distances = NULL)
 }
 \arguments{
 \item{X}{- A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)}
@@ -28,7 +27,9 @@ Given a relative probability surface corresponding to the occurrence of a type o
 }
 \examples{
 library(DRHotNet)
-library(spatstat)
+library(spatstat.core)
+library(spatstat.geom)
+library(spatstat.linnet)
 library(spdep)
 library(raster)
 library(maptools)

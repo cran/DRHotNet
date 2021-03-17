@@ -6,7 +6,9 @@
 #' @return Returns a \code{listw} object in \code{"W"} style
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat)
+#' library(spatstat.core)
+#' library(spatstat.geom)
+#' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
 #' library(maptools)
@@ -15,7 +17,7 @@
 #' chicago_neighbourhood$neighbours[[1]]
 #' @export
 NeighbourhoodMatrixNetwork <- function(network){
-  aux=SpatialLines2PolySet(as.SpatialLines.psp(as.psp(network)))
+  aux=SpatialLines2PolySet(as.SpatialLines.psp(spatstat.geom::as.psp(network)))
   aux=PolySet2SpatialPolygons(aux)
   queen=poly2nb(aux, queen=TRUE)
   W=nb2listw(queen, style="W", zero.policy=TRUE)

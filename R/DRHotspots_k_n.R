@@ -11,7 +11,9 @@
 #' @return Returns a list that contains the differential risk hotspots found for \code{X} and the type of event specified by \code{rel_probs}
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat)
+#' library(spatstat.core)
+#' library(spatstat.geom)
+#' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
 #' library(maptools)
@@ -28,18 +30,18 @@ DRHotspots_k_n <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
   network=X$domain
   
   if (rel_probs$lixel_length!=F){
-    network=lixellate(network,eps=rel_probs$lixel_length)
+    network=spatstat.linnet::lixellate(network,eps=rel_probs$lixel_length)
     #& project into the new network
-    X_aux=lpp(cbind(X$data$x,X$data$y),network)
-    marks(X_aux)=marks(X)
+    X_aux=spatstat.linnet::lpp(cbind(X$data$x,X$data$y),network)
+    spatstat.geom::marks(X_aux)=spatstat.geom::marks(X)
     X=X_aux
   }
   network_lix=X$domain
-  midpoints=midpoints.psp(as.psp(network_lix))
-  segment_lengths=lengths.psp(as.psp(network_lix))
+  midpoints=spatstat.geom::midpoints.psp(spatstat.geom::as.psp(network_lix))
+  segment_lengths=spatstat.geom::lengths_psp(spatstat.geom::as.psp(network_lix))
   
   # Midpoints as a point pattern (on the original network)
-  lpp_midpoints=lpp(midpoints,network)
+  lpp_midpoints=spatstat.linnet::lpp(midpoints,network)
   
   # sig initially contains the segments showing a high relative probability
   
@@ -48,11 +50,11 @@ DRHotspots_k_n <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
   # find events close to the midpoints of sig, to determine n
   if (is.null(event_distances)){
     if (dist=="path"){
-      distances=crossdist.lpp(lpp_midpoints[sig,],X)
+      distances=spatstat.linnet::crossdist.lpp(lpp_midpoints[sig,],X)
     } else{
-      X_planar=as.ppp(X)
-      lpp_midpoints_planar=as.ppp(lpp_midpoints)
-      distances=crossdist.ppp(lpp_midpoints_planar[sig,],X_planar)
+      X_planar=spatstat.geom::as.ppp(X)
+      lpp_midpoints_planar=spatstat.geom::as.ppp(lpp_midpoints)
+      distances=spatstat.geom::crossdist.ppp(lpp_midpoints_planar[sig,],X_planar)
     }
   } else{
     if (length(event_distances)==(length(sig)*length(X$data$x))){
@@ -139,8 +141,8 @@ DRHotspots_k_n <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
     result_final$mark=rel_probs$mark
     result_final$category_mark=rel_probs$category_mark
     ### compute a global PAI
-    marksX=as.data.frame(marks(X))
-    if (!is.null(names(marks(X)))){
+    marksX=as.data.frame(spatstat.geom::marks(X))
+    if (!is.null(names(spatstat.geom::marks(X)))){
       index_mark=which(colnames(marksX)==result_final$mark)
     } else{
       index_mark=1

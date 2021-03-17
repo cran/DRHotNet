@@ -10,7 +10,9 @@
 #' @return Returns a list that contains the relative probability values estimated along the network for the type of event specified by \code{mark} and \code{category_mark}
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat)
+#' library(spatstat.core)
+#' library(spatstat.geom)
+#' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
 #' library(maptools)
@@ -28,10 +30,10 @@ RelativeProbabilityNetwork <- function(X, lixel_length, sigma, mark, category_ma
   
   # Find position (column index) in marks(X) for the mark of interest
   
-  marksX=data.frame(marks(X))
+  marksX=data.frame(spatstat.geom::marks(X))
   if (!is.null(mark)){
-    if (!is.null(names(marks(X)))){
-      find_mark=which((names(marks(X))==mark)==T)
+    if (!is.null(names(spatstat.geom::marks(X)))){
+      find_mark=which((names(spatstat.geom::marks(X))==mark)==T)
     } else{
       find_mark=1
     }
@@ -40,24 +42,24 @@ RelativeProbabilityNetwork <- function(X, lixel_length, sigma, mark, category_ma
   # Compute densities (equal-continuous, PDE method) as a function on a linear network
   
   # Considering all events
-  density_function_all=as.linfun.linim(density.lpp(X, sigma = sigma))
+  density_function_all=spatstat.linnet::as.linfun.linim(spatstat.linnet::density.lpp(X, sigma = sigma))
   
   # Considering only the events whose mark is category_mark
-  density_function_type=as.linfun.linim(density.lpp(X[marksX[,find_mark]==category_mark], sigma = sigma))
+  density_function_type=spatstat.linnet::as.linfun.linim(spatstat.linnet::density.lpp(X[marksX[,find_mark]==category_mark], sigma = sigma))
   
   # Extract network
   network=X$domain
   
   # Lixellize network
   if (lixel_length!=F){
-    network_lix=lixellate(X$domain,eps=lixel_length)
-    midpoints=midpoints.psp(as.psp(network_lix))
+    network_lix=spatstat.linnet::lixellate(X$domain,eps=lixel_length)
+    midpoints=spatstat.geom::midpoints.psp(spatstat.geom::as.psp(network_lix))
   } else{
-    midpoints=midpoints.psp(as.psp(network))
+    midpoints=spatstat.geom::midpoints.psp(spatstat.geom::as.psp(network))
   }
   
   # Midpoints as a point pattern (on the original network)
-  lpp_midpoints=lpp(midpoints,network)
+  lpp_midpoints=spatstat.linnet::lpp(midpoints,network)
   
   # KDE computation
   density_values_all=density_function_all(lpp_midpoints$data$x,lpp_midpoints$data$y,

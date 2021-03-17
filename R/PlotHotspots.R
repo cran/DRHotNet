@@ -10,7 +10,9 @@
 #' @param eps_image - If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat)
+#' library(spatstat.core)
+#' library(spatstat.geom)
+#' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
 #' library(maptools)
@@ -37,16 +39,16 @@ PlotHotspots <- function(X, hotspots, order_extension = NULL, which.plot = NULL,
   }
   
   if (hotspots$lixel_length!=F){
-    network=lixellate(network,eps=hotspots$lixel_length)
+    network=spatstat.linnet::lixellate(network,eps=hotspots$lixel_length)
     # project into the lixellized network
-    X_aux=lpp(cbind(X$data$x,X$data$y),network)
-    marks(X_aux)=marks(X)
+    X_aux=spatstat.linnet::lpp(cbind(X$data$x,X$data$y),network)
+    spatstat.geom::marks(X_aux)=spatstat.geom::marks(X)
     X=X_aux
   }
   network_lix=X$domain
   
   # Create sp object
-  network_lix_sp=as.SpatialLines.psp(as.psp(X))
+  network_lix_sp=as.SpatialLines.psp(spatstat.geom::as.psp(X))
   
   # Extract hotspots segments
   

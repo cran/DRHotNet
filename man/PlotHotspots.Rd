@@ -4,8 +4,14 @@
 \alias{PlotHotspots}
 \title{Plots an object obtained with \code{DiffHotspots_n_k}}
 \usage{
-PlotHotspots(X, hotspots, order_extension = NULL, which.plot = NULL,
-  rotation_angle = 0, eps_image = F)
+PlotHotspots(
+  X,
+  hotspots,
+  order_extension = NULL,
+  which.plot = NULL,
+  rotation_angle = 0,
+  eps_image = F
+)
 }
 \arguments{
 \item{X}{- A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)}
@@ -25,7 +31,9 @@ This function plots a set of differential risk hotspots located along a linear n
 }
 \examples{
 library(DRHotNet)
-library(spatstat)
+library(spatstat.core)
+library(spatstat.geom)
+library(spatstat.linnet)
 library(spdep)
 library(raster)
 library(maptools)

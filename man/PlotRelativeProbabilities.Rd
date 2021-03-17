@@ -4,8 +4,7 @@
 \alias{PlotRelativeProbabilities}
 \title{Plots an object obtained with \code{RelativeProbabilityNetwork}}
 \usage{
-PlotRelativeProbabilities(X, rel_probs, rotation_angle = 0,
-  eps_image = F)
+PlotRelativeProbabilities(X, rel_probs, rotation_angle = 0, eps_image = F)
 }
 \arguments{
 \item{X}{- A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)}
@@ -21,7 +20,9 @@ This function plots the relative probability of occurrence of a type of event al
 }
 \examples{
 library(DRHotNet)
-library(spatstat)
+library(spatstat.core)
+library(spatstat.geom)
+library(spatstat.linnet)
 library(spdep)
 library(maptools)
 \donttest{

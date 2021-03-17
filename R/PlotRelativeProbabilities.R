@@ -8,7 +8,9 @@
 #' @param eps_image - If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat)
+#' library(spatstat.core)
+#' library(spatstat.geom)
+#' library(spatstat.linnet)
 #' library(spdep)
 #' library(maptools)
 #' \donttest{
@@ -29,16 +31,16 @@ PlotRelativeProbabilities <- function(X, rel_probs, rotation_angle = 0, eps_imag
   category_mark=rel_probs$category_mark
   
   if (rel_probs$lixel_length!=F){
-    network=lixellate(network,eps=rel_probs$lixel_length)
+    network=spatstat.linnet::lixellate(network,eps=rel_probs$lixel_length)
     # project into the lixellized network
-    X_aux=lpp(cbind(X$data$x,X$data$y),network)
-    marks(X_aux)=marks(X)
+    X_aux=spatstat.linnet::lpp(cbind(X$data$x,X$data$y),network)
+    spatstat.geom::marks(X_aux)=spatstat.geom::marks(X)
     X=X_aux
   }
   network_lix=X$domain
   
   # Create sp object
-  network_lix_sp=as.SpatialLines.psp(as.psp(X))
+  network_lix_sp=as.SpatialLines.psp(spatstat.geom::as.psp(X))
   
   # Plot
   

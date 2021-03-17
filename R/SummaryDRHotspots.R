@@ -11,7 +11,9 @@
 #' @return Returns a \code{data.frame} providing a summary of a set of differential risk hotspots. Each row of the output corresponds to one hotspot
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat)
+#' library(spatstat.core)
+#' library(spatstat.geom)
+#' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
 #' library(maptools)
@@ -37,15 +39,15 @@ SummaryDRHotspots <- function(X,rel_probs,hotspots,order_extension=NULL,compute_
   }
   
   if (rel_probs$lixel_length!=F){
-    network=lixellate(network,eps=rel_probs$lixel_length)
+    network=spatstat.linnet::lixellate(network,eps=rel_probs$lixel_length)
     # project into the lixellized network
-    X_aux=lpp(cbind(X$data$x,X$data$y),network)
-    marks(X_aux)=marks(X)
+    X_aux=spatstat.linnet::lpp(cbind(X$data$x,X$data$y),network)
+    spatstat.geom::marks(X_aux)=spatstat.geom::marks(X)
     X=X_aux
   }
   network_lix=X$domain
-  middle_points=midpoints.psp(as.psp(network_lix))
-  segment_lengths=lengths.psp(as.psp(network_lix))
+  middle_points=spatstat.geom::midpoints.psp(spatstat.geom::as.psp(network_lix))
+  segment_lengths=spatstat.geom::lengths_psp(spatstat.geom::as.psp(network_lix))
   
   # Neighbourhood matrix
   
@@ -74,8 +76,8 @@ SummaryDRHotspots <- function(X,rel_probs,hotspots,order_extension=NULL,compute_
       weighted_average_true=sum(rel_probs$probs[segments_hotspots]*(segment_lengths[segments_hotspots]/sum(segment_lengths[segments_hotspots])))
       p_value_est=1-length(which(rel_probs_sim<=weighted_average_true))/length(rel_probs_sim)
     }
-    marksX=as.data.frame(marks(X))
-    if (!is.null(names(marks(X)))){
+    marksX=as.data.frame(spatstat.geom::marks(X))
+    if (!is.null(names(spatstat.geom::marks(X)))){
       index_mark=which(colnames(marksX)==mark)
     } else{
       index_mark=1

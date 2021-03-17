@@ -4,8 +4,14 @@
 \alias{SummaryDRHotspots}
 \title{Performs a summary of a set of differential risk hotspots located along a linear network}
 \usage{
-SummaryDRHotspots(X, rel_probs, hotspots, order_extension = NULL,
-  compute_p_value = F, n_it = 40)
+SummaryDRHotspots(
+  X,
+  rel_probs,
+  hotspots,
+  order_extension = NULL,
+  compute_p_value = F,
+  n_it = 40
+)
 }
 \arguments{
 \item{X}{- A \code{lpp} object representing a marked point pattern lying on a linear network (\code{linnet} object)}
@@ -28,7 +34,9 @@ This function provides a basic summary of each differential risk hotspot provide
 }
 \examples{
 library(DRHotNet)
-library(spatstat)
+library(spatstat.core)
+library(spatstat.geom)
+library(spatstat.linnet)
 library(spdep)
 library(raster)
 library(maptools)
