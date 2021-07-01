@@ -17,25 +17,25 @@
 #' library(raster)
 #' library(maptools)
 #' \donttest{
-#' rel_probs_rear_end <- RelativeProbabilityNetwork(X = SampleMarkedPattern, 
-#' lixel_length = 50, sigma = 100, mark = "Collision", category_mark = "Rear-end")
-#' hotspots_rear_end <- DRHotspots_k_n(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end, 
+#' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
+#' lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")
+#' hotspots_rear_end <- drhot(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end, 
 #' k = 1, n = 30)
-#' PlotHotspots(X = SampleMarkedPattern, hotspots = hotspots_rear_end)
+#' plothot(X = SampleMarkedPattern, hotspots = hotspots_rear_end)
 #' }
 #' @export
-PlotHotspots <- function(X, hotspots, order_extension = NULL, which.plot = NULL, rotation_angle = 0, eps_image=F){
+plothot <- function(X, hotspots, order_extension = NULL, which.plot = NULL, rotation_angle = 0, eps_image=F){
   
   network=X$domain
   lixel_length=hotspots$lixel_length
-  sigma=hotspots$sigma
+  h=hotspots$h
   mark=hotspots$mark
   category_mark=hotspots$category_mark
   k=hotspots$k
   n=hotspots$n
   
   if (is.null(order_extension)){
-    order_extension=round(sigma/lixel_length)
+    order_extension=round(h/lixel_length)
   }
   
   if (hotspots$lixel_length!=F){
@@ -76,12 +76,12 @@ PlotHotspots <- function(X, hotspots, order_extension = NULL, which.plot = NULL,
   if (eps_image){
     setEPS()
     postscript(paste0("diff_risk_hotspots_k_",gsub("\\.","_",toString(k)),"_n_",n,"_lixel_",lixel_length,
-                      "_sigma_",sigma,"_type_",mark,"_",category_mark,".eps"), family="Helvetica")
+                      "_h_",h,"_type_",mark,"_",category_mark,".eps"), family="Helvetica")
     par(mar=c(0,0,0,0))
     plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)), col="black", lwd=1,
          main=paste0("Differential risk hotspots '",category_mark, "'",
                      " (", mark,"),", 
-                     "\nlixel_length = ",lixel_length,", sigma = ",sigma, ",",
+                     "\nlixel_length = ",lixel_length,", h = ",h, ",",
                      "\nk = ",k,", n = ",n), line=-4)
     plot(elide(network_lix_sp[segments_hotspots_extension,], rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),
          add=T,col="#fc9272",lwd=3)
@@ -95,7 +95,7 @@ PlotHotspots <- function(X, hotspots, order_extension = NULL, which.plot = NULL,
     plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)), col="black", lwd=1,
          main=paste0("Differential risk hotspots '",category_mark, "'",
                      " (", mark,"),", 
-                     "\nlixel_length = ",lixel_length,", sigma = ",sigma, ",",
+                     "\nlixel_length = ",lixel_length,", h = ",h, ",",
                      "\nk = ",k,", n = ",n))
     plot(elide(network_lix_sp[segments_hotspots_extension,], rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),
          add=T,col="#fc9272",lwd=3)

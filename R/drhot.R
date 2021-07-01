@@ -1,9 +1,9 @@
 #' Identifies differential risk hotspots along a linear network given a vector of relative probabilities computed over the middle points of the segments of the network
 #' 
-#' Given a relative probability surface corresponding to the occurrence of a type of event along a linear network, this function filters and groups in hotspots those segments satisfying two conditions: 1) the relative probability in the segment exceeds the average relative probability per segment in \code{k} times the standard deviation of the complete set of probabilities estimated across all the segments of the network, and 2) there are \code{n} or more events at a distance below \code{sigma} from the middle point of the segment (\code{sigma} is obtained from the object \code{rel_probs} computed with the function \code{RelativeProbabilityNetwork}). In summary, \code{k} and \code{n} control the formation of differential risk hotspots along the network, given a set of relative probabilities covering the network. The choice of a higher value for \code{k} or \code{n} (or both) represents a more strict criterion and leads to a lower number of differential risk hotspots being detected. Users should test several values of \code{k} and \code{n} (sensitivity analysis on \code{k} and \code{n}) in order to reach reasonable choices for the research or practical purposes of their data analyses. This sensitivity analysis can be carried out with the \code{Sensitivity_k_n} function
+#' Given a relative probability surface corresponding to the occurrence of a type of event along a linear network, this function filters and groups in hotspots those segments satisfying two conditions: 1) the relative probability in the segment exceeds the average relative probability per segment in \code{k} times the standard deviation of the complete set of probabilities estimated across all the segments of the network, and 2) there are \code{n} or more events at a distance below \code{h} from the middle point of the segment (\code{h} is obtained from the object \code{rel_probs} computed with the function \code{relpnet}). In summary, \code{k} and \code{n} control the formation of differential risk hotspots along the network, given a set of relative probabilities covering the network. The choice of a higher value for \code{k} or \code{n} (or both) represents a more strict criterion and leads to a lower number of differential risk hotspots being detected. Users should test several values of \code{k} and \code{n} (sensitivity analysis on \code{k} and \code{n}) in order to reach reasonable choices for the research or practical purposes of their data analyses. This sensitivity analysis can be carried out with the \code{drsens} function
 #' 
 #' @param X - A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)
-#' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{RelativeProbabilityNetwork}
+#' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{relpnet}
 #' @param k - A numeric value that controls the procedure of detecting differential risk hotspots (departure from average relative probability), as described above
 #' @param n - A numeric value that controls the procedure of detecting differential risk hotspots (minimum size for the sample of events implicated in the computation of the relative probabilities), as described above
 #' @param dist - A character indicating which distance to use. Two values are allowed: \code{path} (shortest-path distance) and \code{euclidean} (Euclidean distance). By default, the shortest-path distance is used. Change to \code{euclidean} to reduce the computation time or skip memory issues
@@ -18,14 +18,14 @@
 #' library(raster)
 #' library(maptools)
 #' \donttest{
-#' rel_probs_rear_end <- RelativeProbabilityNetwork(X = SampleMarkedPattern, 
-#' lixel_length = 50, sigma = 100, mark = "Collision", category_mark = "Rear-end")
-#' hotspots_rear_end <- DRHotspots_k_n(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end, 
+#' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
+#' lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")
+#' hotspots_rear_end <- drhot(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end, 
 #' k = 1, n = 30)
 #' }
 #' @references Briz-Redon, A., Martinez-Ruiz, F., & Montes, F. (2019). Identification of differential risk hotspots for collision and vehicle type in a directed linear network. Accident Analysis & Prevention, 132, 105278.
 #' @export
-DRHotspots_k_n <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
+drhot <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
   
   network=X$domain
   
@@ -64,13 +64,13 @@ DRHotspots_k_n <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
       stop()
     }
   }
-  closer_than_sigma=matrix(as.numeric(distances<rel_probs$sigma),nrow=nrow(distances))
-  rownames(closer_than_sigma)=sig
-  # print(sum(closer_than_sigma))
+  closer_than_h=matrix(as.numeric(distances<rel_probs$h),nrow=nrow(distances))
+  rownames(closer_than_h)=sig
+  # print(sum(closer_than_h))
   
-  # sig finally contains those segments that have n or more events at distance lower than sigma
-  sig=sig[which(apply(closer_than_sigma,1,sum)>=n)]
-  closer_than_sigma=closer_than_sigma[which(apply(closer_than_sigma,1,sum)>=n),]
+  # sig finally contains those segments that have n or more events at distance lower than h
+  sig=sig[which(apply(closer_than_h,1,sum)>=n)]
+  closer_than_h=closer_than_h[which(apply(closer_than_h,1,sum)>=n),]
 
   if (length(sig)>0){
     W=NeighbourhoodMatrixNetwork(network_lix)
@@ -137,7 +137,7 @@ DRHotspots_k_n <- function(X,rel_probs,k,n,dist="path",event_distances=NULL){
     result_final$k=k
     result_final$n=n
     result_final$lixel_length=rel_probs$lixel_length
-    result_final$sigma=rel_probs$sigma
+    result_final$h=rel_probs$h
     result_final$mark=rel_probs$mark
     result_final$category_mark=rel_probs$category_mark
     ### compute a global PAI

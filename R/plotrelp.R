@@ -1,9 +1,9 @@
-#' Plots an object obtained with \code{RelativeProbabilityNetwork}
+#' Plots an object obtained with \code{relpnet}
 #' 
 #' This function plots the relative probability of occurrence of a type of event along a linear network
 #' 
 #' @param X - A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)
-#' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{RelativeProbabilityNetwork}
+#' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{relpnet}
 #' @param rotation_angle - A rotation angle (in degrees, from 0 to 180) to apply to the network (to improve visualization, if required). By default it is set to 0
 #' @param eps_image - If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}
 #' @examples 
@@ -14,19 +14,19 @@
 #' library(spdep)
 #' library(maptools)
 #' \donttest{
-#' rel_probs_rear_end <- RelativeProbabilityNetwork(X = SampleMarkedPattern, 
-#' lixel_length = 50, sigma = 100, mark = "Collision", category_mark = "Rear-end")
-#' PlotRelativeProbabilities(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end)
+#' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
+#' lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")
+#' plotrelp(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end)
 #' }
 #' @export
-PlotRelativeProbabilities <- function(X, rel_probs, rotation_angle = 0, eps_image=F){
+plotrelp <- function(X, rel_probs, rotation_angle = 0, eps_image=F){
   
   floor_dec=function(x, level=1) round(x - 5*10^(-level-1), level)
   ceiling_dec=function(x, level=1) round(x + 5*10^(-level-1), level)
   
   network=X$domain
   lixel_length=rel_probs$lixel_length
-  sigma=rel_probs$sigma
+  h=rel_probs$h
   mark=rel_probs$mark
   category_mark=rel_probs$category_mark
   
@@ -46,7 +46,7 @@ PlotRelativeProbabilities <- function(X, rel_probs, rotation_angle = 0, eps_imag
   
   if (eps_image){
     setEPS()
-    postscript(paste0("rel_probs_lixel_",lixel_length,"_sigma_",sigma,"_type_",mark,"_",category_mark,".eps"), family="Helvetica")
+    postscript(paste0("rel_probs_lixel_",lixel_length,"_h_",h,"_type_",mark,"_",category_mark,".eps"), family="Helvetica")
     par(mar=c(0,0,0,0))
     breaks_colors=c(-1,quantile(rel_probs$probs,0.2),quantile(rel_probs$probs,0.4),
                     quantile(rel_probs$probs,0.6),quantile(rel_probs$probs,0.8),1)
@@ -56,7 +56,7 @@ PlotRelativeProbabilities <- function(X, rel_probs, rotation_angle = 0, eps_imag
     plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),col=color,lwd=2,
          main=paste0("Relative probabilities '",category_mark, "'",
                      " (", mark,"),", 
-                     "\nlixel_length = ",lixel_length,", sigma = ",sigma), line=-2) 
+                     "\nlixel_length = ",lixel_length,", h = ",h), line=-2) 
     
     legend("bottom", legend=c(paste0("[",floor_dec(min(rel_probs$probs),2),", ",round(breaks_colors[2],2),"]"),
                               paste0("]",round(breaks_colors[2],2),", ",round(breaks_colors[3],2),"]"),
@@ -75,7 +75,7 @@ PlotRelativeProbabilities <- function(X, rel_probs, rotation_angle = 0, eps_imag
     plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),col=color,lwd=2,
          main=paste0("Relative probabilities '",category_mark, "'",
                      " (", mark,"),", 
-                     "\nlixel_length = ",lixel_length,", sigma = ",sigma)) 
+                     "\nlixel_length = ",lixel_length,", h = ",h)) 
     
     legend("bottom", legend=c(paste0("[",floor_dec(min(rel_probs$probs),2),", ",round(breaks_colors[2],2),"]"),
                               paste0("]",round(breaks_colors[2],2),", ",round(breaks_colors[3],2),"]"),

@@ -1,11 +1,11 @@
-#' Performs a sensitivity analysis on the parameters \code{k} and \code{n} that are provided to \code{DRHotspots_k_n}
+#' Performs a sensitivity analysis on the parameters \code{k} and \code{n} that are provided to \code{drhot}
 #' 
-#' Given a set of \code{ks} and \code{ns} parameters, this function allows the user to perform a sensitivity analysis on the parameters \code{k} and \code{n} by calling \code{DRHotspots_k_n} for each combination of \code{k} and \code{n}
+#' Given a set of \code{ks} and \code{ns} parameters, this function allows the user to perform a sensitivity analysis on the parameters \code{k} and \code{n} by calling \code{drhot} for each combination of \code{k} and \code{n}
 #' 
 #' @param X - A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)
-#' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{RelativeProbabilityNetwork}
-#' @param ks - A numeric vector of possible values for the \code{k} parameter that is provided to \code{DRHotspots_k_n} 
-#' @param ns - A numeric vector of possible values for the \code{n} parameter that is provided to \code{DRHotspots_k_n} 
+#' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{relpnet}
+#' @param ks - A numeric vector of possible values for the \code{k} parameter that is provided to \code{drhot} 
+#' @param ns - A numeric vector of possible values for the \code{n} parameter that is provided to \code{drhot} 
 #' @return A matrix providing the type-specific prediction accuracy index that corresponds to the set differential risk hotspots obtained for each value of \code{k} or \code{n} provided in \code{ks} and \code{ns}, respectively. A \code{NA} value in this matrix indicates that no differential risk hotspots are found for the corresponding combination of \code{k} and \code{n}
 #' @examples 
 #' library(DRHotNet)
@@ -16,14 +16,14 @@
 #' library(raster)
 #' library(maptools)
 #' \donttest{
-#' rel_probs_rear_end <- RelativeProbabilityNetwork(X = SampleMarkedPattern,
-#' lixel_length = 50,sigma = 100,mark = "Collision",category_mark = "Rear-end")
-#' sensitivity_analysis <- Sensitivity_k_n(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end, 
+#' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern,
+#' lixel_length = 50,h = 100,mark = "Collision",category_mark = "Rear-end")
+#' sensitivity_analysis <- drsens(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end, 
 #' ks = c(1,2), ns = c(30,40))
 #' }
 #' @references Briz-Redon, A., Martinez-Ruiz, F., & Montes, F. (2019). Identification of differential risk hotspots for collision and vehicle type in a directed linear network. Accident Analysis & Prevention, 132, 105278.
 #' @export
-Sensitivity_k_n <- function(X,rel_probs,ks,ns){
+drsens <- function(X,rel_probs,ks,ns){
   
   network=X$domain
   
@@ -48,7 +48,7 @@ Sensitivity_k_n <- function(X,rel_probs,ks,ns){
     distances=spatstat.linnet::crossdist.lpp(lpp_midpoints[sig,],X)
     for (j in 1:length(ns)){
       cat(paste0("k = ",ks[i],", n = ",ns[j]),"\n")
-      hotspots=DRHotspots_k_n(X,rel_probs,ks[i],ns[j],event_distances=distances)
+      hotspots=drhot(X,rel_probs,ks[i],ns[j],event_distances=distances)
       if (!is.null(hotspots)){
         PAIs[i,j]=hotspots$PAI
       }

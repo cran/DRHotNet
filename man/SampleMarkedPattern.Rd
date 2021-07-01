@@ -3,7 +3,7 @@
 \docType{data}
 \name{SampleMarkedPattern}
 \alias{SampleMarkedPattern}
-\title{Marked point pattern on a road network simulating traffic accidents}
+\title{Marked point pattern on a road network simulating traffic accident locations}
 \format{
 An object of class \code{lpp} (inherits from \code{ppx}) of length 3.
 }
