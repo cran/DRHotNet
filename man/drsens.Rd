@@ -23,7 +23,6 @@ Given a set of \code{ks} and \code{ns} parameters, this function allows the user
 }
 \examples{
 library(DRHotNet)
-library(spatstat.core)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)

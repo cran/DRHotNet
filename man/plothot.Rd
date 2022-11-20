@@ -27,11 +27,10 @@ plothot(
 \item{eps_image}{- If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}}
 }
 \description{
-This function plots a set of differential risk hotspots located along a linear network. An extension of the hotspots (including the kth order neighbourhs of the segments of the hotspots) is also plotted
+This function plots a set of differential risk hotspots located along a linear network. An extension of the hotspots (including the kth order neighbours of the segments of the hotspots) is also plotted
 }
 \examples{
 library(DRHotNet)
-library(spatstat.core)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)

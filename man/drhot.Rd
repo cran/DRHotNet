@@ -27,7 +27,6 @@ Given a relative probability surface corresponding to the occurrence of a type o
 }
 \examples{
 library(DRHotNet)
-library(spatstat.core)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)

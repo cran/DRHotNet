@@ -27,7 +27,6 @@ Given a marked point pattern lying on a linear network structure, this function 
 }
 \examples{
 library(DRHotNet)
-library(spatstat.core)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)

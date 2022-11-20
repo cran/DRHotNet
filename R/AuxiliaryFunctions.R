@@ -77,7 +77,7 @@ VecinosOrdenk <- function(grafo, k, i, vertices_ejes, lista_vecinos){
     if (ncol(resultado)>0){
       buscar_i=which((resultado[1,]==i)==T)
       resultado=resultado[,-buscar_i]
-      if (class(resultado)=="numeric"){
+      if (is.null(dim(resultado))){
         resultado=as.matrix(resultado)
       }
       buscar_duplicados=which(duplicated(resultado[1,])==T)
@@ -124,7 +124,7 @@ VecinosOrdenkSiguiente <- function(grafo, k, i, vertices_ejes, lista_vecinos, re
   if (ncol(resultado)>0){
     buscar_i=which((resultado[1,]==i)==T)
     resultado=resultado[,-buscar_i]
-    if (class(resultado)=="numeric"){
+    if (is.null(dim(resultado))){
       resultado=as.matrix(resultado)
     }
     buscar_duplicados=which(duplicated(resultado[1,])==T)
@@ -175,7 +175,7 @@ MarkPermutation <- function(X){
 }
 
 UTM2LONLAT <- function(coord){
-  if (class(coord)=="numeric"){
+  if (is.null(dim(coord))){
     coord=t(as.matrix(coord))
   }
   df=as.data.frame(coord)
@@ -189,7 +189,7 @@ UTM2LONLAT <- function(coord){
 }
 
 LONLAT2UTM <- function(coord){
-  if (class(coord)=="numeric"){
+  if (is.null(dim(coord))){
     coord=t(as.matrix(coord))
   }
   df=as.data.frame(coord)

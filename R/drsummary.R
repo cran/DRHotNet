@@ -11,7 +11,6 @@
 #' @return Returns a \code{data.frame} providing a summary of a set of differential risk hotspots. Each row of the output corresponds to one hotspot
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat.core)
 #' library(spatstat.geom)
 #' library(spatstat.linnet)
 #' library(spdep)

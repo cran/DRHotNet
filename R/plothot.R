@@ -1,6 +1,6 @@
 #' Plots an object obtained with \code{DiffHotspots_n_k}
 #' 
-#' This function plots a set of differential risk hotspots located along a linear network. An extension of the hotspots (including the kth order neighbourhs of the segments of the hotspots) is also plotted
+#' This function plots a set of differential risk hotspots located along a linear network. An extension of the hotspots (including the kth order neighbours of the segments of the hotspots) is also plotted
 #' 
 #' @param X - A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)
 #' @param hotspots - A set of differential risk hotspots obtained with the function \code{DiffHotspots_n_k}
@@ -10,7 +10,6 @@
 #' @param eps_image - If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat.core)
 #' library(spatstat.geom)
 #' library(spatstat.linnet)
 #' library(spdep)

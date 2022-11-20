@@ -6,7 +6,6 @@
 #' @return Returns a \code{listw} object in \code{"W"} style
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat.core)
 #' library(spatstat.geom)
 #' library(spatstat.linnet)
 #' library(spdep)

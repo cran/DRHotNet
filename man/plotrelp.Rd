@@ -20,7 +20,6 @@ This function plots the relative probability of occurrence of a type of event al
 }
 \examples{
 library(DRHotNet)
-library(spatstat.core)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)

@@ -5,7 +5,6 @@
 #' @import sp
 #' @import spatstat
 #' @import spatstat.geom
-#' @import spatstat.core
 #' @import spatstat.linnet
 #' @import spdep
 #' @import stats

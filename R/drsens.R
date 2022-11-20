@@ -9,7 +9,6 @@
 #' @return A matrix providing the type-specific prediction accuracy index that corresponds to the set differential risk hotspots obtained for each value of \code{k} or \code{n} provided in \code{ks} and \code{ns}, respectively. A \code{NA} value in this matrix indicates that no differential risk hotspots are found for the corresponding combination of \code{k} and \code{n}
 #' @examples 
 #' library(DRHotNet)
-#' library(spatstat.core)
 #' library(spatstat.geom)
 #' library(spatstat.linnet)
 #' library(spdep)

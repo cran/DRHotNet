@@ -34,7 +34,6 @@ This function provides a basic summary of each differential risk hotspot provide
 }
 \examples{
 library(DRHotNet)
-library(spatstat.core)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)
