@@ -4,14 +4,7 @@
 \alias{plothot}
 \title{Plots an object obtained with \code{DiffHotspots_n_k}}
 \usage{
-plothot(
-  X,
-  hotspots,
-  order_extension = NULL,
-  which.plot = NULL,
-  rotation_angle = 0,
-  eps_image = F
-)
+plothot(X, hotspots, order_extension = NULL, which.plot = NULL, eps_image = F)
 }
 \arguments{
 \item{X}{- A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)}
@@ -21,8 +14,6 @@ plothot(
 \item{order_extension}{- A natural number indicating a neighbourhood order to be used for constructing an extension of the differential risk hotspots. The summary is also given for the segments forming this extension}
 
 \item{which.plot}{- A numeric vector indicating which differential risk hotspots to plot (according to the way they are ordered in \code{hotspots})}
-
-\item{rotation_angle}{- A rotation angle (in degrees, from 0 to 180) to apply to the network (to improve visualization, if required). By default it is set to 0}
 
 \item{eps_image}{- If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}}
 }
@@ -35,7 +26,6 @@ library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)
 library(raster)
-library(maptools)
 \donttest{
 rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
 lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")

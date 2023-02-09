@@ -4,21 +4,19 @@
 #' 
 #' @param X - A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)
 #' @param rel_probs - An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{relpnet}
-#' @param rotation_angle - A rotation angle (in degrees, from 0 to 180) to apply to the network (to improve visualization, if required). By default it is set to 0
 #' @param eps_image - If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}
 #' @examples 
 #' library(DRHotNet)
 #' library(spatstat.geom)
 #' library(spatstat.linnet)
 #' library(spdep)
-#' library(maptools)
 #' \donttest{
 #' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
 #' lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")
 #' plotrelp(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end)
 #' }
 #' @export
-plotrelp <- function(X, rel_probs, rotation_angle = 0, eps_image=F){
+plotrelp <- function(X, rel_probs, eps_image=F){
   
   floor_dec=function(x, level=1) round(x - 5*10^(-level-1), level)
   ceiling_dec=function(x, level=1) round(x + 5*10^(-level-1), level)
@@ -38,50 +36,28 @@ plotrelp <- function(X, rel_probs, rotation_angle = 0, eps_image=F){
   }
   network_lix=X$domain
   
-  # Create sp object
-  network_lix_sp=as.SpatialLines.psp(spatstat.geom::as.psp(X))
+  # Create psp object
+  network_lix_psp=spatstat.geom::as.psp(X)
+  marks(network_lix_psp)=rel_probs$probs
   
   # Plot
   
   if (eps_image){
     setEPS()
     postscript(paste0("rel_probs_lixel_",lixel_length,"_h_",h,"_type_",mark,"_",category_mark,".eps"), family="Helvetica")
-    par(mar=c(0,0,0,0))
-    breaks_colors=c(-1,quantile(rel_probs$probs,0.2),quantile(rel_probs$probs,0.4),
-                    quantile(rel_probs$probs,0.6),quantile(rel_probs$probs,0.8),1)
-    color=cut(rel_probs$probs,breaks = breaks_colors)
-    palette_edit=c("#2C7BB6","#ABD9E9","#bababa","#FDAE61","#D7191C")
-    palette(palette_edit)
-    plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),col=color,lwd=2,
+    par(mar=c(5.1, 4.1, 4.1, 2.1))
+    plot(network_lix_psp,lwd=2,
          main=paste0("Relative probabilities '",category_mark, "'",
                      " (", mark,"),", 
-                     "\nlixel_length = ",lixel_length,", h = ",h), line=-2) 
-    
-    legend("bottom", legend=c(paste0("[",floor_dec(min(rel_probs$probs),2),", ",round(breaks_colors[2],2),"]"),
-                              paste0("]",round(breaks_colors[2],2),", ",round(breaks_colors[3],2),"]"),
-                              paste0("]",round(breaks_colors[3],2),", ",round(breaks_colors[4],2),"]"), 
-                              paste0("]",round(breaks_colors[4],2),", ",round(breaks_colors[5],2),"]"),
-                              paste0("]",round(breaks_colors[5],2),", ",ceiling_dec(max(rel_probs$probs),2),"]")),
-           col=palette_edit, lty=1, lwd=3, cex=0.85, title = NULL, horiz = T)
+                     "\nlixel_length = ",lixel_length,", h = ",h), line=0) 
+
     dev.off()
   } else{
     par(xpd=TRUE)
-    breaks_colors=c(-1,quantile(rel_probs$probs,0.2),quantile(rel_probs$probs,0.4),
-                    quantile(rel_probs$probs,0.6),quantile(rel_probs$probs,0.8),1)
-    color=cut(rel_probs$probs,breaks = breaks_colors)
-    palette_edit=c("#2C7BB6","#ABD9E9","#bababa","#FDAE61","#D7191C")
-    palette(palette_edit)
-    plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),col=color,lwd=2,
+    plot(network_lix_psp,lwd=2,
          main=paste0("Relative probabilities '",category_mark, "'",
                      " (", mark,"),", 
-                     "\nlixel_length = ",lixel_length,", h = ",h)) 
-    
-    legend("bottom", legend=c(paste0("[",floor_dec(min(rel_probs$probs),2),", ",round(breaks_colors[2],2),"]"),
-                              paste0("]",round(breaks_colors[2],2),", ",round(breaks_colors[3],2),"]"),
-                              paste0("]",round(breaks_colors[3],2),", ",round(breaks_colors[4],2),"]"), 
-                              paste0("]",round(breaks_colors[4],2),", ",round(breaks_colors[5],2),"]"),
-                              paste0("]",round(breaks_colors[5],2),", ",ceiling_dec(max(rel_probs$probs),2),"]")),
-           col=palette_edit, lty=1, lwd=3, cex=0.5, title = NULL, horiz = T)
+                     "\nlixel_length = ",lixel_length,", h = ",h), line=0) 
   }
   
   

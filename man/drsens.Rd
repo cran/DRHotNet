@@ -27,7 +27,6 @@ library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)
 library(raster)
-library(maptools)
 \donttest{
 rel_probs_rear_end <- relpnet(X = SampleMarkedPattern,
 lixel_length = 50,h = 100,mark = "Collision",category_mark = "Rear-end")

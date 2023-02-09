@@ -1,6 +1,5 @@
 #' @import graphics
 #' @import grDevices
-#' @import maptools
 #' @import PBSmapping
 #' @import sp
 #' @import spatstat

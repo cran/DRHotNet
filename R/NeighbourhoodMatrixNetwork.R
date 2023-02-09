@@ -10,14 +10,15 @@
 #' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
-#' library(maptools)
 #' chicago_neighbourhood <- NeighbourhoodMatrixNetwork(chicago$domain)
 #' class(chicago_neighbourhood)
 #' chicago_neighbourhood$neighbours[[1]]
 #' @export
 NeighbourhoodMatrixNetwork <- function(network){
-  aux=SpatialLines2PolySet(as.SpatialLines.psp(spatstat.geom::as.psp(network)))
-  aux=PolySet2SpatialPolygons(aux)
+  aux=SpatialPolygons(lapply(1:network$lines$n, 
+                             function(i) Polygons(list(Polygon(cbind(t(network$lines[[1]][i,c(1,3)]),
+                                                                     t(network$lines[[1]][i,c(2,4)])))), 
+                                                  paste0("Line",i))))
   queen=poly2nb(aux, queen=TRUE)
   W=nb2listw(queen, style="W", zero.policy=TRUE)
   return(W)

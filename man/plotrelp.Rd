@@ -4,14 +4,12 @@
 \alias{plotrelp}
 \title{Plots an object obtained with \code{relpnet}}
 \usage{
-plotrelp(X, rel_probs, rotation_angle = 0, eps_image = F)
+plotrelp(X, rel_probs, eps_image = F)
 }
 \arguments{
 \item{X}{- A \code{lpp} object representing a marked point pattern lying on a road network (\code{linnet} object)}
 
 \item{rel_probs}{- An object containing the relative probabilities of a specific type of event along the linear network contained in \code{X}, generated through the function \code{relpnet}}
-
-\item{rotation_angle}{- A rotation angle (in degrees, from 0 to 180) to apply to the network (to improve visualization, if required). By default it is set to 0}
 
 \item{eps_image}{- If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}}
 }
@@ -23,7 +21,6 @@ library(DRHotNet)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)
-library(maptools)
 \donttest{
 rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
 lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")

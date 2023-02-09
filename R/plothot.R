@@ -6,7 +6,6 @@
 #' @param hotspots - A set of differential risk hotspots obtained with the function \code{DiffHotspots_n_k}
 #' @param order_extension - A natural number indicating a neighbourhood order to be used for constructing an extension of the differential risk hotspots. The summary is also given for the segments forming this extension 
 #' @param which.plot - A numeric vector indicating which differential risk hotspots to plot (according to the way they are ordered in \code{hotspots})
-#' @param rotation_angle - A rotation angle (in degrees, from 0 to 180) to apply to the network (to improve visualization, if required). By default it is set to 0
 #' @param eps_image - If set to \code{TRUE}, an .eps image is generated. By default it is set to \code{FALSE}
 #' @examples 
 #' library(DRHotNet)
@@ -14,7 +13,6 @@
 #' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
-#' library(maptools)
 #' \donttest{
 #' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
 #' lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")
@@ -23,7 +21,7 @@
 #' plothot(X = SampleMarkedPattern, hotspots = hotspots_rear_end)
 #' }
 #' @export
-plothot <- function(X, hotspots, order_extension = NULL, which.plot = NULL, rotation_angle = 0, eps_image=F){
+plothot <- function(X, hotspots, order_extension = NULL, which.plot = NULL, eps_image=F){
   
   network=X$domain
   lixel_length=hotspots$lixel_length
@@ -46,8 +44,8 @@ plothot <- function(X, hotspots, order_extension = NULL, which.plot = NULL, rota
   }
   network_lix=X$domain
   
-  # Create sp object
-  network_lix_sp=as.SpatialLines.psp(spatstat.geom::as.psp(X))
+  # Create psp object
+  network_lix_psp=spatstat.geom::as.psp(X)
   
   # Extract hotspots segments
   
@@ -76,32 +74,28 @@ plothot <- function(X, hotspots, order_extension = NULL, which.plot = NULL, rota
     setEPS()
     postscript(paste0("diff_risk_hotspots_k_",gsub("\\.","_",toString(k)),"_n_",n,"_lixel_",lixel_length,
                       "_h_",h,"_type_",mark,"_",category_mark,".eps"), family="Helvetica")
-    par(mar=c(0,0,0,0))
-    plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)), col="black", lwd=1,
+    par(mar=c(5.1, 4.1, 4.1, 2.1))
+    plot(network_lix_psp, col="black", lwd=1,
          main=paste0("Differential risk hotspots '",category_mark, "'",
                      " (", mark,"),", 
                      "\nlixel_length = ",lixel_length,", h = ",h, ",",
-                     "\nk = ",k,", n = ",n), line=-4)
-    plot(elide(network_lix_sp[segments_hotspots_extension,], rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),
+                     "\nk = ",k,", n = ",n), line=0)
+    plot(network_lix_psp[segments_hotspots_extension,],
          add=T,col="#fc9272",lwd=3)
-    plot(elide(network_lix_sp[segments_hotspots,], rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),
+    plot(network_lix_psp[segments_hotspots,],
          add=T,col="#de2d26",lwd=3)
-    legend("bottom", legend=c("DRHotspot (center)",paste0("DRHotspot (extension), order = ", order_extension)),
-           col=c("#de2d26","#fc9272"), lty=1, lwd=3, cex=0.85, title = NULL, horiz = T)
     dev.off()
   } else{
     par(xpd=TRUE)
-    plot(elide(network_lix_sp, rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)), col="black", lwd=1,
+    plot(network_lix_psp, col="black", lwd=1,
          main=paste0("Differential risk hotspots '",category_mark, "'",
                      " (", mark,"),", 
                      "\nlixel_length = ",lixel_length,", h = ",h, ",",
-                     "\nk = ",k,", n = ",n))
-    plot(elide(network_lix_sp[segments_hotspots_extension,], rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),
+                     "\nk = ",k,", n = ",n), line=0)
+    plot(network_lix_psp[segments_hotspots_extension,],
          add=T,col="#fc9272",lwd=3)
-    plot(elide(network_lix_sp[segments_hotspots,], rotate=rotation_angle, center=apply(bbox(network_lix_sp), 1, mean)),
+    plot(network_lix_psp[segments_hotspots,],
          add=T,col="#de2d26",lwd=3)
-    legend("bottom", legend=c("DRHotspot (center)",paste0("DRHotspot (extension), order = ", order_extension)),
-           col=c("#de2d26","#fc9272"), lty=1, lwd=3, cex=0.5, title = NULL, horiz = T)
   }
   
 

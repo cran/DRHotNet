@@ -21,7 +21,6 @@ library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)
 library(raster)
-library(maptools)
 chicago_neighbourhood <- NeighbourhoodMatrixNetwork(chicago$domain)
 class(chicago_neighbourhood)
 chicago_neighbourhood$neighbours[[1]]
