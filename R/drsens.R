@@ -13,12 +13,10 @@
 #' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
-#' \donttest{
-#' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern,
-#' lixel_length = 50,h = 100,mark = "Collision",category_mark = "Rear-end")
-#' sensitivity_analysis <- drsens(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end, 
+#' rel_assault <- relpnet(X = chicago, 
+#' lixel_length = 50, h = 50, mark = "marks", category_mark = "assault")
+#' sensitivity_analysis <- drsens(X = chicago, rel_probs = rel_assault, 
 #' ks = c(1,2), ns = c(30,40))
-#' }
 #' @references Briz-Redon, A., Martinez-Ruiz, F., & Montes, F. (2019). Identification of differential risk hotspots for collision and vehicle type in a directed linear network. Accident Analysis & Prevention, 132, 105278.
 #' @export
 drsens <- function(X,rel_probs,ks,ns){

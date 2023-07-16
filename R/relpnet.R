@@ -15,10 +15,8 @@
 #' library(spatstat.linnet)
 #' library(spdep)
 #' library(raster)
-#' \donttest{
-#' rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
-#' lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")
-#' }
+#' rel_assault <- relpnet(X = chicago, 
+#' lixel_length = 50, h = 50, mark = "marks", category_mark = "assault")
 #' @references Baddeley, A., Rubak, E., & Turner, R. (2015). Spatial point patterns: methodology and applications with R. Chapman and Hall/CRC.
 #' @references Briz-Redon, A., Martinez-Ruiz, F., & Montes, F. (2019). Identification of differential risk hotspots for collision and vehicle type in a directed linear network. Accident Analysis & Prevention, 132, 105278.
 #' @references Diggle, P. J. (2013). Statistical analysis of spatial and spatio-temporal point patterns. Chapman and Hall/CRC.

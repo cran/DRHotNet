@@ -21,9 +21,7 @@ library(DRHotNet)
 library(spatstat.geom)
 library(spatstat.linnet)
 library(spdep)
-\donttest{
-rel_probs_rear_end <- relpnet(X = SampleMarkedPattern, 
-lixel_length = 50, h = 100, mark = "Collision", category_mark = "Rear-end")
-plotrelp(X = SampleMarkedPattern, rel_probs = rel_probs_rear_end)
-}
+rel_assault <- relpnet(X = chicago, 
+lixel_length = 50, h = 50, mark = "marks", category_mark = "assault")
+plotrelp(X = chicago, rel_probs = rel_assault)
 }
